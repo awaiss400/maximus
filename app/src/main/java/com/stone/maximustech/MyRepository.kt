@@ -10,9 +10,10 @@ import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 
+
 class MyRepository @Inject constructor( private val apiService: ApiService) {
 
-    suspend fun getfacts(): Flow<List<Facts>> = flow {
+    suspend fun getfacts(): Flow<Facts> = flow {
         emit(apiService.getFacts())
     }.flowOn(Dispatchers.IO)
-    }
+}
