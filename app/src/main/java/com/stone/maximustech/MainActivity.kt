@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.stone.maximustech.R
 import com.stone.maximustech.databinding.ActivityMainBinding
 import com.stone.maximustech.databinding.ActivitySplachBinding.inflate
@@ -30,26 +31,29 @@ class MainActivity : AppCompatActivity() {
         databinding.buttonrefresh.setOnClickListener {
             viewModel.getfact()
         }
-        when (val result = viewModel.todolistresponse.value) {
-            is ApiStates.Success -> {
-                databinding.progressBars.visibility=View.GONE
-                databinding.mycard.visibility=View.VISIBLE
-                Toast.makeText(this, "success", Toast.LENGTH_LONG).show()
-                databinding.tvTextss.text=result.data.fact
-            }
-            is ApiStates.Failure->{
-databinding.tvTextss.text="ERROR"
-                databinding.progressBars.visibility=View.GONE
-                Toast.makeText(this, "Network Error", Toast.LENGTH_SHORT).show()
-            }
-            is ApiStates.Loading->{
-             databinding.mycard.visibility=View.GONE
-                databinding.progressBars.visibility=View.VISIBLE
-                Toast.makeText(this, "loading", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-            }
+         viewModel.factsresponse.observe(this) {
+        when(it){
+                     is ApiStates.Success -> {
+                     databinding.progressBars.visibility=View.GONE
+                     databinding.mycard.visibility=View.VISIBLE
+//                     Toast.makeText(this, "success", Toast.LENGTH_LONG).show()
+                     databinding.tvTextss.text=it.data.fact
+                 }
+                     is ApiStates.Failure->{
+                     databinding.tvTextss.text="ERROR"
+                     databinding.progressBars.visibility=View.GONE
+                     Toast.makeText(this, "Network Error", Toast.LENGTH_SHORT).show()
+                 }
+                     is ApiStates.Loading->{
+                     databinding.mycard.visibility=View.GONE
+                     databinding.progressBars.visibility=View.VISIBLE
+//                     Toast.makeText(this, "loading", Toast.LENGTH_SHORT).show()
+                 }
+                     else -> {
+                     Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                 }
+        }
+
         }
     }
 
